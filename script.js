@@ -1,3 +1,11 @@
+// Global variables
+var lenPassword = 0;
+
+const upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+const specialCharacters= "~@#$%^&*/{>?]{";
+const numericCharacters = "0123456789"
+
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
@@ -14,99 +22,78 @@ function writePassword() {
 generateBtn.addEventListener("click", writePassword);
 
 
-// Prompt user to type password length and store the answer in passwordLength variable
-var passwordLength = prompt("How many characters would you like your password to contain?");
-
-// Create a function that checks if the passwordLength is valid
-function checkPasswordLength(){
-  // if passwordLength >= 8 and passwordLength <= 128, 
-  if (passwordLength >= 8 && passwordLength <= 128){
-    confirmCharacterType()
+// function that prompt user to enter password length
+function passwordLength(){
+  var userPasswordLength = prompt("How many  characters would you like your password to contain?");
+  if(userPasswordLength){
+    return userPasswordLength;
+  }else{
+    alert("You must specify your password length.");
+    return;
   }
-  // if passwordLength < 8, alert "password must be at least 8 characters"
-  else if (passwordLength < 8){
-    alert("password must be at least 8 characters");
-  }
-  // else if passworldLength > 128, alert Password length must be less than 129 characters.
-  else if (passwordLength > 128){
-    alert("Password length must be less than 129 characters.");
-  }
-  // else, alert invalid password and ask the user to enter a valid number
-  else{
-    alert("Invalid input. Please enter a number between 8 and 128")
-  }
-  return;
 }
 
-// Create a variable that stores selected characters 
-var characterType = [];
-
-
 // Create a function that confirms character types
-function confirmCharacterType(){
+function confirmCharacterType(lenPassword){
+  // Create a variable that stores selected characters 
+  var characterType = "";
+  var password = parseInt(lenPassword);
+
   // click ok to include special characters.
   var specialCharacter = confirm("Click ok to confirm special characters please.")
   // if user clicks ok, then add special character to characterType.
   if (specialCharacter){
-    characterType.push(specialCharacter);
-  } 
+    characterType += (randomCharacters(specialCharacters, password));
+  }
+
   //click ok to include numeric characters.
   var numericCharacter = confirm("Click ok to confirm numeric character please.")
   // if user clicks ok, then add numericCharacter to characterType.
   if (numericCharacter){
-    characterType.push(numericCharacter);
+    characterType += (randomCharacters(numericCharacters, password));
   }
+
   // click ok to include lowercase characters.
   var lowercaseCharacter = confirm("Click ok to confirm lowercase please.")
   //  if user clicks ok, then add lowercase to characterType.
   if (lowercaseCharacter){
-    characterType.push(lowercaseCharacter)
+    characterType += (randomCharacters(lowerCaseLetters, password));
   }
+  
   // click ok to include uppercase
   var uppercaseCharacter = confirm("Click ok to confirm uppercase please.")
   // if user click ok, then add uppercase to characterType
   if (uppercaseCharacter){
-    characterType.push(uppercaseCharacter)
+    characterType += (randomCharacters(upperCaseLetters, password));
   }
-  return;
+
+  if (characterType.length == 0){
+    alert("You must select at least one character type"); 
+  }
+  return characterType;
 }
- 
 
-// Create a function that generates random uppercase letters
-function randomUpperCase(){
-  var upperCaseLetters = [];
-  for (var i = 0; i <= passwordLength; i++){
-    var randomCharCode = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
-    var randomChar = String.fromCharCode(randomCharCode);
-    upperCaseLetters.push(randomChar)
+// function that generate random characters according to user password length
+function randomCharacters(types, length){
+  var char = types;
+  var randomPass = " ";
+  for (var i = 0; i < length; i++){
+    var temp = Math.floor(Math.random()*types.length);
+    randomPass += char[temp];
   }
-  return;
+  return randomPass;
 }
-console.log(randomUpperCase())
 
-
-// Create a variable for random lowercase letters
-var randomLowercase = [];
-
-// Create a variable for random special characters
-var randomSpecial = [];
-
-// Create a variable for random numeric characters
-var randomNumeric = [];
-
-
-
-      
-// Create a function that check if user selected a password character type
-function isCharacterType(){
-  if (!characterType){
-    alert("You must select at least one character type")
+// function that generates a random password
+function generatePassword(){
+  var lenPassword = passwordLength();
+  if (lenPassword >= 8 && lenPassword <= 128){
+    var characterType = confirmCharacterType(lenPassword);
+    var newPassword = randomCharacters(characterType,lenPassword);
+    return newPassword;
   }
-  // if user confirmed password character type, randomly generate a password
-  else {
-
+  else{
+    alert ("Please try again. Enter a number between 8 and 128 ")
+    return;
   }
-}     
-
-
-  
+}
